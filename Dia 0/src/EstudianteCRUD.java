@@ -3,9 +3,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class EstudianteCRUD {
-    private List<Estudiante> estudiantes = new ArrayList<>();
+    private final List<Estudiante> estudiantes = new ArrayList<>();
     private int contadorId = 1;
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     public void crearEstudiante() {
         System.out.println("Ingrese nombres:");
