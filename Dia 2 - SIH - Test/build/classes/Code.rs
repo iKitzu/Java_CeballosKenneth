@@ -1,0 +1,9 @@
+Paciente
+PersonalTecnico
+Persona
+Personal
+PersonalOperaciones
+PersonalAdministrativo
+Doctor
+Hospital
+Departamento
