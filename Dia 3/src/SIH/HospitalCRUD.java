@@ -5,577 +5,609 @@ import java.util.Scanner;
 
 public class HospitalCRUD {
 
-    // Crear instancia de Conexion
-    private final Conexion conexion = new Conexion();
-
     public static void main(String[] args) {
-        // Crear instancia de HospitalCRUD
-        HospitalCRUD hospitalCRUD = new HospitalCRUD();
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("========Menú========");
+            System.out.println("1. Opciones Hospital");
+            System.out.println("2. Opciones Pacientes");
+            System.out.println("3. Opciones Personal");
+            System.out.println("4. Opciones Pabellon");
+            System.out.println("5. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
 
-        // Ejecutar el menú principal
-        hospitalCRUD.run();
-    }
-
-    // Método para ejecutar el menú principal
-    public void run() {
-        Connection conn = conexion.establecerConexion();
-        if (conn == null) {
-            System.err.println("No se pudo establecer conexión con la base de datos.");
-            return;
-        }
-
-        try (Scanner scanner = new Scanner(System.in)) {
-            boolean running = true;
-            
-            while (running) {
-                System.out.println("\nMenú Principal:");
-                System.out.println("1. Opciones Hospital");
-                System.out.println("2. Opciones Pacientes");
-                System.out.println("3. Opciones Personal");
-                System.out.println("4. Opciones Pabellón");
-                System.out.println("5. Salir");
-                System.out.print("Seleccione una opción: ");
-                int option = scanner.nextInt();
-                scanner.nextLine(); // Consumir el salto de línea
-                
-                switch (option) {
-                    case 1:
-                        hospitalMenu(conn, scanner);
-                        break;
-                    case 2:
-                        pacienteMenu(conn, scanner);
-                        break;
-                    case 3:
-                        personalMenu(conn, scanner);
-                        break;
-                    case 4:
-                        pabellonMenu(conn, scanner);
-                        break;
-                    case 5:
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Opción inválida.");
-                        break;
-                }
+            switch (opcion) {
+                case 1:
+                    menuHospital(scanner);
+                    break;
+                case 2:
+                    menuPaciente(scanner);
+                    break;
+                case 3:
+                    menuPersonal(scanner);
+                    break;
+                case 4:
+                    menuPabellon(scanner);
+                    break;
+                case 5:
+                    System.out.println("Saliendo...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Opción no válida.");
             }
         }
-        conexion.cerrarConexion(conn);
     }
 
-    // Menú Hospital
-    private void hospitalMenu(Connection conn, Scanner scanner) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\nOpciones Hospital:");
+    // Menú de Hospital
+    private static void menuHospital(Scanner scanner) {
+        while (true) {
+            System.out.println("========Opciones Hospital========");
             System.out.println("1. Crear Hospital");
-            System.out.println("2. Leer Hospitales");
-            System.out.println("3. Actualizar Hospital");
-            System.out.println("4. Eliminar Hospital");
+            System.out.println("2. Actualizar Hospital");
+            System.out.println("3. Eliminar Hospital");
+            System.out.println("4. Ver Hospitales");
             System.out.println("5. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
-            int option = scanner.nextInt();
+            int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 
-            switch (option) {
+            switch (opcion) {
                 case 1:
-                    createHospital(conn, scanner);
+                    crearHospital(scanner);
                     break;
                 case 2:
-                    readHospitals(conn);
+                    actualizarHospital(scanner);
                     break;
                 case 3:
-                    updateHospital(conn, scanner);
+                    eliminarHospital(scanner);
                     break;
                 case 4:
-                    deleteHospital(conn, scanner);
+                    verHospitales();
                     break;
                 case 5:
-                    running = false;
-                    break;
+                    return;
                 default:
-                    System.out.println("Opción inválida.");
-                    break;
+                    System.out.println("Opción no válida.");
             }
         }
     }
 
-    // Menú Pacientes
-    private void pacienteMenu(Connection conn, Scanner scanner) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\nOpciones Pacientes:");
+    // Menú de Paciente
+    private static void menuPaciente(Scanner scanner) {
+        while (true) {
+            System.out.println("========Opciones Pacientes========");
             System.out.println("1. Crear Paciente");
-            System.out.println("2. Leer Pacientes");
-            System.out.println("3. Actualizar Paciente");
-            System.out.println("4. Eliminar Paciente");
+            System.out.println("2. Actualizar Paciente");
+            System.out.println("3. Eliminar Paciente");
+            System.out.println("4. Ver Pacientes");
             System.out.println("5. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
-            int option = scanner.nextInt();
+            int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 
-            switch (option) {
+            switch (opcion) {
                 case 1:
-                    createPaciente(conn, scanner);
+                    crearPaciente(scanner);
                     break;
                 case 2:
-                    readPacientes(conn);
+                    actualizarPaciente(scanner);
                     break;
                 case 3:
-                    updatePaciente(conn, scanner);
+                    eliminarPaciente(scanner);
                     break;
                 case 4:
-                    deletePaciente(conn, scanner);
+                    verPacientes();
                     break;
                 case 5:
-                    running = false;
-                    break;
+                    return;
                 default:
-                    System.out.println("Opción inválida.");
-                    break;
+                    System.out.println("Opción no válida.");
             }
         }
     }
 
-    // Menú Personal
-    private void personalMenu(Connection conn, Scanner scanner) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\nOpciones Personal:");
+    // Menú de Personal
+    private static void menuPersonal(Scanner scanner) {
+        while (true) {
+            System.out.println("========Opciones Personal========");
             System.out.println("1. Crear Personal");
-            System.out.println("2. Leer Personal");
-            System.out.println("3. Actualizar Personal");
-            System.out.println("4. Eliminar Personal");
+            System.out.println("2. Actualizar Personal");
+            System.out.println("3. Eliminar Personal");
+            System.out.println("4. Ver Personal");
             System.out.println("5. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
-            int option = scanner.nextInt();
+            int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 
-            switch (option) {
+            switch (opcion) {
                 case 1:
-                    createPersonal(conn, scanner);
+                    crearPersonal(scanner);
                     break;
                 case 2:
-                    readPersonal(conn);
+                    actualizarPersonal(scanner);
                     break;
                 case 3:
-                    updatePersonal(conn, scanner);
+                    eliminarPersonal(scanner);
                     break;
                 case 4:
-                    deletePersonal(conn, scanner);
+                    verPersonal();
                     break;
                 case 5:
-                    running = false;
-                    break;
+                    return;
                 default:
-                    System.out.println("Opción inválida.");
-                    break;
+                    System.out.println("Opción no válida.");
             }
         }
     }
 
-    // Menú Pabellón
-    private void pabellonMenu(Connection conn, Scanner scanner) {
-        boolean running = true;
-        while (running) {
-            System.out.println("\nOpciones Pabellón:");
-            System.out.println("1. Crear Pabellón");
-            System.out.println("2. Leer Pabellones");
-            System.out.println("3. Actualizar Pabellón");
-            System.out.println("4. Eliminar Pabellón");
+    // Menú de Pabellon
+    private static void menuPabellon(Scanner scanner) {
+        while (true) {
+            System.out.println("========Opciones Pabellon========");
+            System.out.println("1. Crear Pabellon");
+            System.out.println("2. Actualizar Pabellon");
+            System.out.println("3. Eliminar Pabellon");
+            System.out.println("4. Ver Pabellones");
             System.out.println("5. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
-            int option = scanner.nextInt();
+            int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 
-            switch (option) {
+            switch (opcion) {
                 case 1:
-                    createPabellon(conn, scanner);
+                    crearPabellon(scanner);
                     break;
                 case 2:
-                    readPabellones(conn);
+                    actualizarPabellon(scanner);
                     break;
                 case 3:
-                    updatePabellon(conn, scanner);
+                    eliminarPabellon(scanner);
                     break;
                 case 4:
-                    deletePabellon(conn, scanner);
+                    verPabellones();
                     break;
                 case 5:
-                    running = false;
-                    break;
+                    return;
                 default:
-                    System.out.println("Opción inválida.");
-                    break;
+                    System.out.println("Opción no válida.");
             }
         }
     }
 
     // Métodos CRUD para Hospital
-    private void createHospital(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese nombre del hospital: ");
+    private static void crearHospital(Scanner scanner) {
+        System.out.println("");
+        System.out.println("**********************************");
+        System.out.println("* Ingrese el nombre del hospital *");
         String nombre = scanner.nextLine();
-        System.out.print("Ingrese dirección del hospital: ");
+        System.out.println("Ingrese la dirección del hospital:");
         String direccion = scanner.nextLine();
 
         String sql = "INSERT INTO Hospital (nombre, direccion) VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nombre);
-            stmt.setString(2, direccion);
-            stmt.executeUpdate();
-            System.out.println("Hospital creado exitosamente.");
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, direccion);
+            pstmt.executeUpdate();
+            System.out.println("");
+            System.out.println("*********************************");
+            System.out.println("* Hospital creado exitosamente. *");
+            System.out.println("");
         } catch (SQLException e) {
-            System.err.println("Error al crear hospital: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void readHospitals(Connection conn) {
-        String sql = "SELECT * FROM Hospital";
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                System.out.println("ID: " + rs.getInt("id") +
-                                   ", Nombre: " + rs.getString("nombre") +
-                                   ", Dirección: " + rs.getString("direccion"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al leer hospitales: " + e.getMessage());
-        }
-    }
+    private static void actualizarHospital(Scanner scanner) {
+        System.out.println("");
+        System.out.println("*******************************************");
+        System.out.println("* Ingrese el ID del hospital a actualizar *");
 
-    private void updateHospital(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del hospital a actualizar: ");
         int id = scanner.nextInt();
         scanner.nextLine(); // Consumir el salto de línea
 
-        System.out.print("Ingrese nuevo nombre del hospital: ");
+        System.out.println("Ingrese el nuevo nombre del hospital:");
         String nombre = scanner.nextLine();
-        System.out.print("Ingrese nueva dirección del hospital: ");
+        System.out.println("Ingrese la nueva dirección del hospital:");
         String direccion = scanner.nextLine();
 
         String sql = "UPDATE Hospital SET nombre = ?, direccion = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nombre);
-            stmt.setString(2, direccion);
-            stmt.setInt(3, id);
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("Hospital actualizado exitosamente.");
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, direccion);
+            pstmt.setInt(3, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("");
+                System.out.println("**************************************");
+                System.out.println("* Hospital actualizado exitosamente. *");
+                System.out.println("**************************************");
+                System.out.println("");
             } else {
-                System.out.println("Hospital no encontrado.");
+                System.out.println("");
+                System.out.println("*********************************************************");
+                System.out.println("* No se encontró el hospital con el ID proporcionado :c *");
+                System.out.println("*********************************************************");
+                System.out.println("");
             }
         } catch (SQLException e) {
-            System.err.println("Error al actualizar hospital: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void deleteHospital(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del hospital a eliminar: ");
+    private static void eliminarHospital(Scanner scanner) {
+        System.out.println("");
+        System.out.println("*******************************************");
+        System.out.println("* Ingrese el ID del hospital a eliminar *");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
 
         String sql = "DELETE FROM Hospital WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rowsDeleted = stmt.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Hospital eliminado exitosamente.");
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("");
+                System.out.println("***********************************");
+                System.out.println("* Hospital eliminado exitosamente *");
+                System.out.println("***********************************");
             } else {
-                System.out.println("Hospital no encontrado.");
+                System.out.println("");
+                System.out.println("******************************************************");
+                System.out.println("* No se encontró el hospital con el ID proporcionado *");
+                System.out.println("******************************************************");
+                System.out.println("");
             }
         } catch (SQLException e) {
-            System.err.println("Error al eliminar hospital: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Métodos CRUD para Pacientes
-    private void createPaciente(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese título del paciente: ");
-        String titulo = scanner.nextLine();
-        System.out.print("Ingrese nombres del paciente: ");
-        String nombres = scanner.nextLine();
-        System.out.print("Ingrese apellidos del paciente: ");
-        String apellidos = scanner.nextLine();
-        System.out.print("Ingrese dirección del paciente: ");
-        String direccion = scanner.nextLine();
-        System.out.print("Ingrese fecha de nacimiento del paciente (YYYY-MM-DD): ");
-        String fechaNacimiento = scanner.nextLine();
-        System.out.print("Ingrese ID del pabellón al que pertenece: ");
-        int pabellonId = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
-
-        String pabellonCheckSql = "SELECT COUNT(*) FROM Pabellon WHERE id = ?";
-        try (PreparedStatement pabellonCheckStmt = conn.prepareStatement(pabellonCheckSql)) {
-            pabellonCheckStmt.setInt(1, pabellonId);
-            try (ResultSet rs = pabellonCheckStmt.executeQuery()) {
-                rs.next();
-                if (rs.getInt(1) == 0) {
-                    System.out.println("El pabellón no existe.");
-                    return;
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al verificar pabellón: " + e.getMessage());
-        }
-
-        String sql = "INSERT INTO Paciente (titulo, nombres, apellidos, direccion, fecha_nacimiento, pabellon_id) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, titulo);
-            stmt.setString(2, nombres);
-            stmt.setString(3, apellidos);
-            stmt.setString(4, direccion);
-            stmt.setString(5, fechaNacimiento);
-            stmt.setInt(6, pabellonId);
-            stmt.executeUpdate();
-            System.out.println("Paciente creado exitosamente.");
-        } catch (SQLException e) {
-            System.err.println("Error al crear paciente: " + e.getMessage());
-        }
-    }
-
-    private void readPacientes(Connection conn) {
-        String sql = "SELECT * FROM Paciente";
-        try (Statement stmt = conn.createStatement();
+    private static void verHospitales() {
+        String sql = "SELECT * FROM Hospital";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                System.out.println("ID: " + rs.getInt("id") +
-                                   ", Título: " + rs.getString("titulo") +
-                                   ", Nombres: " + rs.getString("nombres") +
-                                   ", Apellidos: " + rs.getString("apellidos") +
-                                   ", Dirección: " + rs.getString("direccion") +
-                                   ", Fecha de Nacimiento: " + rs.getDate("fecha_nacimiento") +
-                                   ", ID del Pabellón: " + rs.getInt("pabellon_id"));
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String direccion = rs.getString("direccion");
+                System.out.println("Hospital ID: " + id + ", Nombre: " + nombre + ", Dirección: " + direccion);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer pacientes: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void updatePaciente(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del paciente a actualizar: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
-
-        System.out.print("Ingrese nuevo título del paciente: ");
+    // Métodos CRUD para Paciente
+    private static void crearPaciente(Scanner scanner) {
+        System.out.println("**********************************");
+        System.out.println("* Ingrese el título del paciente *");
         String titulo = scanner.nextLine();
-        System.out.print("Ingrese nuevos nombres del paciente: ");
+        System.out.println("Ingrese los nombres del paciente:");
         String nombres = scanner.nextLine();
-        System.out.print("Ingrese nuevos apellidos del paciente: ");
+        System.out.println("Ingrese los apellidos del paciente:");
         String apellidos = scanner.nextLine();
-        System.out.print("Ingrese nueva dirección del paciente: ");
+        System.out.println("Ingrese la dirección del paciente:");
         String direccion = scanner.nextLine();
-        System.out.print("Ingrese nueva fecha de nacimiento del paciente (YYYY-MM-DD): ");
+        System.out.println("Ingrese la fecha de nacimiento del paciente (YYYY-MM-DD):");
         String fechaNacimiento = scanner.nextLine();
-        System.out.print("Ingrese nuevo ID del pabellón al que pertenece: ");
-        int pabellonId = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
+        System.out.println("Ingrese el nombre del pabellón al que pertenece el paciente:");
+        String pabellonNombre = scanner.nextLine();
 
-        String pabellonCheckSql = "SELECT COUNT(*) FROM Pabellon WHERE id = ?";
-        try (PreparedStatement pabellonCheckStmt = conn.prepareStatement(pabellonCheckSql)) {
-            pabellonCheckStmt.setInt(1, pabellonId);
-            try (ResultSet rs = pabellonCheckStmt.executeQuery()) {
-                rs.next();
-                if (rs.getInt(1) == 0) {
-                    System.out.println("El pabellón no existe.");
-                    return;
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al verificar pabellón: " + e.getMessage());
+        if (!pabellonExiste(pabellonNombre)) {
+            System.out.println("");
+            System.out.println("*************************");
+            System.out.println("* El pabellón no existe *");
+            System.out.println("*************************");
+            System.out.println("");
+            return;
         }
 
-        String sql = "UPDATE Paciente SET titulo = ?, nombres = ?, apellidos = ?, direccion = ?, fecha_nacimiento = ?, pabellon_id = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, titulo);
-            stmt.setString(2, nombres);
-            stmt.setString(3, apellidos);
-            stmt.setString(4, direccion);
-            stmt.setString(5, fechaNacimiento);
-            stmt.setInt(6, pabellonId);
-            stmt.setInt(7, id);
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("Paciente actualizado exitosamente.");
-            } else {
-                System.out.println("Paciente no encontrado.");
-            }
+        String sql = "INSERT INTO Paciente (titulo, nombres, apellidos, direccion, fecha_nacimiento, pabellon) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, titulo);
+            pstmt.setString(2, nombres);
+            pstmt.setString(3, apellidos);
+            pstmt.setString(4, direccion);
+            pstmt.setString(5, fechaNacimiento);
+            pstmt.setString(6, pabellonNombre);
+            pstmt.executeUpdate();
+            System.out.println("");
+            System.out.println("********************************");
+            System.out.println("* Paciente creado exitosamente *");
+            System.out.println("********************************");
+            System.out.println("");
         } catch (SQLException e) {
-            System.err.println("Error al actualizar paciente: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void deletePaciente(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del paciente a eliminar: ");
+    private static void actualizarPaciente(Scanner scanner) {
+        System.out.println("");
+        System.out.println("*******************************************");
+        System.out.println("* Ingrese el ID del paciente a actualizar *");
         int id = scanner.nextInt();
         scanner.nextLine(); // Consumir el salto de línea
+
+        System.out.println("Ingrese el nuevo título del paciente:");
+        String titulo = scanner.nextLine();
+        System.out.println("Ingrese los nuevos nombres del paciente:");
+        String nombres = scanner.nextLine();
+        System.out.println("Ingrese los nuevos apellidos del paciente:");
+        String apellidos = scanner.nextLine();
+        System.out.println("Ingrese la nueva dirección del paciente:");
+        String direccion = scanner.nextLine();
+        System.out.println("Ingrese la nueva fecha de nacimiento del paciente (YYYY-MM-DD):");
+        String fechaNacimiento = scanner.nextLine();
+        System.out.println("Ingrese el nuevo nombre del pabellón al que pertenece el paciente:");
+        String pabellonNombre = scanner.nextLine();
+
+        if (!pabellonExiste(pabellonNombre)) {
+            System.out.println("");
+            System.out.println("*************************");
+            System.out.println("* El pabellón no existe *");
+            System.out.println("*************************");
+            return;
+        }
+
+        String sql = "UPDATE Paciente SET titulo = ?, nombres = ?, apellidos = ?, direccion = ?, fecha_nacimiento = ?, pabellon = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, titulo);
+            pstmt.setString(2, nombres);
+            pstmt.setString(3, apellidos);
+            pstmt.setString(4, direccion);
+            pstmt.setString(5, fechaNacimiento);
+            pstmt.setString(6, pabellonNombre);
+            pstmt.setInt(7, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("");
+                System.out.println("*************************************");
+                System.out.println("* Paciente actualizado exitosamente *");
+                System.out.println("*************************************");
+                System.out.println("");
+            } else {
+                System.out.println("");
+                System.out.println("******************************************************");
+                System.out.println("* No se encontró el paciente con el ID proporcionado *");
+                System.out.println("******************************************************");
+                System.out.println("");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void eliminarPaciente(Scanner scanner) {
+        System.out.println("");
+        System.out.println("*************************");
+        System.out.println("Ingrese el ID del paciente a eliminar:");
+        int id = scanner.nextInt();
 
         String sql = "DELETE FROM Paciente WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rowsDeleted = stmt.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Paciente eliminado exitosamente.");
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("");
+                System.out.println("***********************************");
+                System.out.println("* Paciente eliminado exitosamente *");
+                System.out.println("***********************************");
+                System.out.println("");
             } else {
-                System.out.println("Paciente no encontrado.");
+                System.out.println("");
+                System.out.println("******************************************************");
+                System.out.println("* No se encontró el paciente con el ID proporcionado *");
+                System.out.println("******************************************************");
             }
         } catch (SQLException e) {
-            System.err.println("Error al eliminar paciente: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void verPacientes() {
+        String sql = "SELECT * FROM Paciente";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titulo = rs.getString("titulo");
+                String nombres = rs.getString("nombres");
+                String apellidos = rs.getString("apellidos");
+                String direccion = rs.getString("direccion");
+                String fechaNacimiento = rs.getString("fecha_nacimiento");
+                String pabellon = rs.getString("pabellon");
+                System.out.println("Paciente ID: " + id + ", Título: " + titulo + ", Nombres: " + nombres + ", Apellidos: " + apellidos + ", Dirección: " + direccion + ", Fecha de Nacimiento: " + fechaNacimiento + ", Pabellón: " + pabellon);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     // Métodos CRUD para Personal
-    private void createPersonal(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese nombres del personal: ");
+    private static void crearPersonal(Scanner scanner) {
+        System.out.println("Ingrese los nombres del personal:");
         String nombres = scanner.nextLine();
-        System.out.print("Ingrese título del personal: ");
+        System.out.println("Ingrese el título del personal:");
         String titulo = scanner.nextLine();
 
         String sql = "INSERT INTO Personal (nombres, titulo) VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nombres);
-            stmt.setString(2, titulo);
-            stmt.executeUpdate();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombres);
+            pstmt.setString(2, titulo);
+            pstmt.executeUpdate();
             System.out.println("Personal creado exitosamente.");
         } catch (SQLException e) {
-            System.err.println("Error al crear personal: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void readPersonal(Connection conn) {
-        String sql = "SELECT * FROM Personal";
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                System.out.println("ID: " + rs.getInt("id") +
-                                   ", Nombres: " + rs.getString("nombres") +
-                                   ", Título: " + rs.getString("titulo"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al leer personal: " + e.getMessage());
-        }
-    }
-
-    private void updatePersonal(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del personal a actualizar: ");
+    private static void actualizarPersonal(Scanner scanner) {
+        System.out.println("Ingrese el ID del personal a actualizar:");
         int id = scanner.nextInt();
         scanner.nextLine(); // Consumir el salto de línea
 
-        System.out.print("Ingrese nuevos nombres del personal: ");
+        System.out.println("Ingrese los nuevos nombres del personal:");
         String nombres = scanner.nextLine();
-        System.out.print("Ingrese nuevo título del personal: ");
+        System.out.println("Ingrese el nuevo título del personal:");
         String titulo = scanner.nextLine();
 
         String sql = "UPDATE Personal SET nombres = ?, titulo = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nombres);
-            stmt.setString(2, titulo);
-            stmt.setInt(3, id);
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombres);
+            pstmt.setString(2, titulo);
+            pstmt.setInt(3, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
                 System.out.println("Personal actualizado exitosamente.");
             } else {
-                System.out.println("Personal no encontrado.");
+                System.out.println("No se encontró el personal con el ID proporcionado.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al actualizar personal: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void deletePersonal(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del personal a eliminar: ");
+    private static void eliminarPersonal(Scanner scanner) {
+        System.out.println("Ingrese el ID del personal a eliminar:");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
 
         String sql = "DELETE FROM Personal WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rowsDeleted = stmt.executeUpdate();
-            if (rowsDeleted > 0) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
                 System.out.println("Personal eliminado exitosamente.");
             } else {
-                System.out.println("Personal no encontrado.");
+                System.out.println("No se encontró el personal con el ID proporcionado.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al eliminar personal: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Métodos CRUD para Pabellón
-    private void createPabellon(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese nombre del pabellón: ");
-        String nombre = scanner.nextLine();
-        System.out.print("Ingrese capacidad del pabellón: ");
-        int capacidad = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
-
-        String sql = "INSERT INTO Pabellon (nombre, capacidad) VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nombre);
-            stmt.setInt(2, capacidad);
-            stmt.executeUpdate();
-            System.out.println("Pabellón creado exitosamente.");
-        } catch (SQLException e) {
-            System.err.println("Error al crear pabellón: " + e.getMessage());
-        }
-    }
-
-    private void readPabellones(Connection conn) {
-        String sql = "SELECT * FROM Pabellon";
-        try (Statement stmt = conn.createStatement();
+    private static void verPersonal() {
+        String sql = "SELECT * FROM Personal";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                System.out.println("ID: " + rs.getInt("id") +
-                                   ", Nombre: " + rs.getString("nombre") +
-                                   ", Capacidad: " + rs.getInt("capacidad"));
+                int id = rs.getInt("id");
+                String nombres = rs.getString("nombres");
+                String titulo = rs.getString("titulo");
+                System.out.println("Personal ID: " + id + ", Nombres: " + nombres + ", Título: " + titulo);
             }
         } catch (SQLException e) {
-            System.err.println("Error al leer pabellones: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void updatePabellon(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del pabellón a actualizar: ");
+    // Métodos CRUD para Pabellon
+    private static void crearPabellon(Scanner scanner) {
+        System.out.println("Ingrese el nombre del pabellón:");
+        String nombre = scanner.nextLine();
+        System.out.println("Ingrese la capacidad del pabellón:");
+        int capacidad = scanner.nextInt();
+
+        String sql = "INSERT INTO Pabellon (nombre, capacidad) VALUES (?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            pstmt.setInt(2, capacidad);
+            pstmt.executeUpdate();
+            System.out.println("Pabellón creado exitosamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void actualizarPabellon(Scanner scanner) {
+        System.out.println("Ingrese el ID del pabellón a actualizar:");
         int id = scanner.nextInt();
         scanner.nextLine(); // Consumir el salto de línea
 
-        System.out.print("Ingrese nuevo nombre del pabellón: ");
+        System.out.println("Ingrese el nuevo nombre del pabellón:");
         String nombre = scanner.nextLine();
-        System.out.print("Ingrese nueva capacidad del pabellón: ");
+        System.out.println("Ingrese la nueva capacidad del pabellón:");
         int capacidad = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
 
         String sql = "UPDATE Pabellon SET nombre = ?, capacidad = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nombre);
-            stmt.setInt(2, capacidad);
-            stmt.setInt(3, id);
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            pstmt.setInt(2, capacidad);
+            pstmt.setInt(3, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
                 System.out.println("Pabellón actualizado exitosamente.");
             } else {
-                System.out.println("Pabellón no encontrado.");
+                System.out.println("No se encontró el pabellón con el ID proporcionado.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al actualizar pabellón: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void deletePabellon(Connection conn, Scanner scanner) {
-        System.out.print("Ingrese ID del pabellón a eliminar: ");
+    private static void eliminarPabellon(Scanner scanner) {
+        System.out.println("Ingrese el ID del pabellón a eliminar:");
         int id = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
 
         String sql = "DELETE FROM Pabellon WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rowsDeleted = stmt.executeUpdate();
-            if (rowsDeleted > 0) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
                 System.out.println("Pabellón eliminado exitosamente.");
             } else {
-                System.out.println("Pabellón no encontrado.");
+                System.out.println("No se encontró el pabellón con el ID proporcionado.");
             }
         } catch (SQLException e) {
-            System.err.println("Error al eliminar pabellón: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    private static void verPabellones() {
+        String sql = "SELECT * FROM Pabellon";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                int capacidad = rs.getInt("capacidad");
+                System.out.println("Pabellón ID: " + id + ", Nombre: " + nombre + ", Capacidad: " + capacidad);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para verificar si un pabellón existe
+    private static boolean pabellonExiste(String nombre) {
+        String sql = "SELECT COUNT(*) FROM Pabellon WHERE nombre = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
