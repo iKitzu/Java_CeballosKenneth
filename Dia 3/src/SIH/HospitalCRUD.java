@@ -9,7 +9,7 @@ public class HospitalCRUD {
         Scanner scanner = new Scanner(System.in);
 
         final String RESET = "\033[0m";
-        final String Colorsito = "\033[47m";
+        final String RED = "\033[31m";
         
         while (true) {
             System.out.println("\n============================");
