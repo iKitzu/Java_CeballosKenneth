@@ -30,11 +30,11 @@ public class HospitalCRUD {
                 case 3 -> menuPersonal(scanner);
                 case 4 -> menuPabellon(scanner);
                 case 5 -> {
-                    System.out.println("Saliendo...");
+                    System.out.println("Hasta la proxima... (Musica Dupsted)");
                     scanner.close();
                     return;
                 }
-                default -> System.out.println("Opción no válida.");
+                default -> System.out.println("\nOpción no válida.\n");
             }
         }
     }
@@ -62,7 +62,7 @@ public class HospitalCRUD {
                 case 5 -> {
                     return;
                 }
-                default -> System.out.println("Opción no válida.");
+                default -> System.out.println("\nOpción no válida.\n");
             }
         }
     }
@@ -90,7 +90,7 @@ public class HospitalCRUD {
                 case 5 -> {
                     return;
                 }
-                default -> System.out.println("Opción no válida.");
+                default -> System.out.println("\nOpción no válida.\n");
             }
         }
     }
@@ -118,7 +118,7 @@ public class HospitalCRUD {
                 case 5 -> {
                     return;
                 }
-                default -> System.out.println("Opción no válida.");
+                default -> System.out.println("\nOpción no válida.\n");
             }
         }
     }
@@ -146,7 +146,7 @@ public class HospitalCRUD {
                 case 5 -> {
                     return;
                 }
-                default -> System.out.println("Opción no válida.");
+                default -> System.out.println("\nOpción no válida.\n");
             }
         }
     }
@@ -196,7 +196,8 @@ public class HospitalCRUD {
             if (affectedRows > 0) {
                 System.out.println("\n¡Hospital actualizado exitosamente!");
             } else {
-                System.out.println("\nNo se encontró el hospital con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el hospital con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -215,9 +216,10 @@ public class HospitalCRUD {
             pstmt.setInt(1, id);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("\n¡Hospital eliminado exitosamente!");
+                System.out.println("\n¡Hospital eliminado exitosamente! (Fue bombardeado por دون دجاج)");
             } else {
-                System.out.println("\nNo se encontró el hospital con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el hospital con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -319,7 +321,8 @@ public class HospitalCRUD {
             if (affectedRows > 0) {
                 System.out.println("\n¡Paciente actualizado exitosamente!");
             } else {
-                System.out.println("\nNo se encontró el paciente con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el paciente con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -338,9 +341,10 @@ public class HospitalCRUD {
             pstmt.setInt(1, id);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("\n¡Paciente eliminado exitosamente!");
+                System.out.println("\n¡Paciente eliminado exitosamente! (Que en paz descanse.....)");
             } else {
-                System.out.println("\nNo se encontró el paciente con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el paciente con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -384,7 +388,7 @@ public class HospitalCRUD {
             pstmt.setString(1, nombres);
             pstmt.setString(2, titulo);
             pstmt.executeUpdate();
-            System.out.println("\n¡Personal creado exitosamente!");
+            System.out.println("\n¡Personal creado exitosamente!, ¡A explotarlo laboralmente >:D!");
         } catch (SQLException e) {
         }
     }
@@ -412,7 +416,8 @@ public class HospitalCRUD {
             if (affectedRows > 0) {
                 System.out.println("\n¡Personal actualizado exitosamente!");
             } else {
-                System.out.println("\nNo se encontró el personal con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el personal con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -431,9 +436,10 @@ public class HospitalCRUD {
             pstmt.setInt(1, id);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("\n¡Personal eliminado exitosamente!");
+                System.out.println("\n¡Personal despedido exitosamente (no volvera a llevar pan a la casa :c)!");
             } else {
-                System.out.println("\nNo se encontró el personal con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el personal con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -501,7 +507,8 @@ public class HospitalCRUD {
             if (affectedRows > 0) {
                 System.out.println("\n¡Pabellón actualizado exitosamente!");
             } else {
-                System.out.println("\nNo se encontró el pabellón con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el pabellón con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
@@ -522,7 +529,8 @@ public class HospitalCRUD {
             if (affectedRows > 0) {
                 System.out.println("\n¡Pabellón eliminado exitosamente!");
             } else {
-                System.out.println("\nNo se encontró el pabellón con el ID proporcionado.");
+                System.out.println("\n¯\\_(ツ)_/¯");
+                System.out.println("No se encontró el pabellón con el ID proporcionado.");
             }
         } catch (SQLException e) {
         }
