@@ -13,8 +13,15 @@ public class DatabaseConnection {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            if (connection != null) {
+                System.out.println("\n");
+                System.out.println("\n");
+                System.out.println("\n");
+                System.out.println("\n");
+                System.out.println("\n");
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Se perdio la conexión. :(");
         }
         return connection;
     }
