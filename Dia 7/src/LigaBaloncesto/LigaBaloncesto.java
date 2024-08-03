@@ -117,11 +117,16 @@ public class LigaBaloncesto {
         scanner.nextLine(); // Consumir nueva línea
 
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String queryVerificar = "SELECT id FROM partidos WHERE id = ?";
+            String queryVerificar = "SELECT id, finalizado FROM partidos WHERE id = ?";
             try (PreparedStatement stmtVerificar = conn.prepareStatement(queryVerificar)) {
                 stmtVerificar.setInt(1, partidoId);
                 ResultSet rs = stmtVerificar.executeQuery();
                 if (rs.next()) {
+                    boolean finalizado = rs.getBoolean("finalizado");
+                    if (finalizado) {
+                        System.out.println("El partido ya está finalizado y no se puede modificar.");
+                        return;
+                    }
                     System.out.print("Puntos equipo local: ");
                     int puntosLocal = scanner.nextInt();
                     System.out.print("Puntos equipo visitante: ");
@@ -196,27 +201,30 @@ public class LigaBaloncesto {
         scanner.nextLine(); // Consumir nueva línea
 
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String queryVerificar = "SELECT id FROM partidos WHERE id = ?";
+            String queryVerificar = "SELECT finalizado FROM partidos WHERE id = ?";
             try (PreparedStatement stmtVerificar = conn.prepareStatement(queryVerificar)) {
                 stmtVerificar.setInt(1, partidoId);
                 ResultSet rs = stmtVerificar.executeQuery();
                 if (rs.next()) {
+                    boolean finalizado = rs.getBoolean("finalizado");
+                    if (finalizado) {
+                        System.out.println("El partido ya está finalizado y no se puede modificar.");
+                        return;
+                    }
+
                     System.out.print("Nuevo equipo local (dejar vacío para no cambiar): ");
                     String nuevoEquipoLocal = scanner.nextLine();
                     System.out.print("Nuevo equipo visitante (dejar vacío para no cambiar): ");
                     String nuevoEquipoVisitante = scanner.nextLine();
                     System.out.print("Nueva fecha (dejar vacío para no cambiar, formato: día/mes/año): ");
                     String nuevaFechaInput = scanner.nextLine();
-                    LocalDate nuevaFecha = null;
-                    if (!nuevaFechaInput.isEmpty()) {
-                        nuevaFecha = LocalDate.parse(nuevaFechaInput, DateTimeFormatter.ofPattern("d/M/yyyy"));
-                    }
+                    LocalDate nuevaFecha = nuevaFechaInput.isEmpty() ? null : LocalDate.parse(nuevaFechaInput, DateTimeFormatter.ofPattern("d/M/yyyy"));
 
-                    String queryActualizar = "UPDATE partidos SET equipo_local = COALESCE(NULLIF(?, ''), equipo_local), equipo_visitante = COALESCE(NULLIF(?, ''), equipo_visitante), fecha = COALESCE(?, fecha) WHERE id = ?";
+                    String queryActualizar = "UPDATE partidos SET equipo_local = COALESCE(?, equipo_local), equipo_visitante = COALESCE(?, equipo_visitante), fecha = COALESCE(?, fecha) WHERE id = ?";
                     try (PreparedStatement stmtActualizar = conn.prepareStatement(queryActualizar)) {
-                        stmtActualizar.setString(1, nuevoEquipoLocal);
-                        stmtActualizar.setString(2, nuevoEquipoVisitante);
-                        stmtActualizar.setObject(3, nuevaFecha != null ? Date.valueOf(nuevaFecha) : null);
+                        stmtActualizar.setString(1, nuevoEquipoLocal.isEmpty() ? null : nuevoEquipoLocal);
+                        stmtActualizar.setString(2, nuevoEquipoVisitante.isEmpty() ? null : nuevoEquipoVisitante);
+                        stmtActualizar.setDate(3, nuevaFecha != null ? Date.valueOf(nuevaFecha) : null);
                         stmtActualizar.setInt(4, partidoId);
                         stmtActualizar.executeUpdate();
                         System.out.println("Partido modificado exitosamente.");
