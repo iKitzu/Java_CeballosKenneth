@@ -3,7 +3,6 @@ package LigaBaloncesto;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 public abstract class Partido {
     protected String equipoLocal;
@@ -69,7 +68,7 @@ public abstract class Partido {
     public static LocalDate leerFechaDesdeConsola() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         System.out.print("Ingrese la fecha (día/mes/año): ");
-        String fechaInput = new Scanner(System.in).nextLine();
+        String fechaInput = new java.util.Scanner(System.in).nextLine();
         try {
             return LocalDate.parse(fechaInput, formatter);
         } catch (DateTimeParseException e) {
