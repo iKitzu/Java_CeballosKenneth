@@ -111,132 +111,137 @@ public class LigaBaloncesto {
     }
 
     private static void finalizarPartido() {
-        System.out.println("\n=== Finalizar Partido ===");
-        System.out.print("Ingrese el ID del partido a finalizar: ");
-        int partidoId = scanner.nextInt();
-        scanner.nextLine(); // Consumir nueva línea
+    System.out.println("\n=== Finalizar Partido ===");
+    System.out.print("Ingrese el ID del partido a finalizar: ");
+    int partidoId = scanner.nextInt();
+    scanner.nextLine(); // Consumir nueva línea
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String queryVerificar = "SELECT id, finalizado FROM partidos WHERE id = ?";
-            try (PreparedStatement stmtVerificar = conn.prepareStatement(queryVerificar)) {
-                stmtVerificar.setInt(1, partidoId);
-                ResultSet rs = stmtVerificar.executeQuery();
-                if (rs.next()) {
-                    boolean finalizado = rs.getBoolean("finalizado");
-                    if (finalizado) {
-                        System.out.println("El partido ya está finalizado y no se puede modificar.");
-                        return;
-                    }
-                    System.out.print("Puntos equipo local: ");
-                    int puntosLocal = scanner.nextInt();
-                    System.out.print("Puntos equipo visitante: ");
-                    int puntosVisitante = scanner.nextInt();
-                    scanner.nextLine(); // Consumir nueva línea
-
-                    String queryActualizar = "UPDATE partidos SET cestas_local = ?, cestas_visitante = ?, finalizado = TRUE WHERE id = ?";
-                    try (PreparedStatement stmtActualizar = conn.prepareStatement(queryActualizar)) {
-                        stmtActualizar.setInt(1, puntosLocal);
-                        stmtActualizar.setInt(2, puntosVisitante);
-                        stmtActualizar.setInt(3, partidoId);
-                        stmtActualizar.executeUpdate();
-                        System.out.println("Partido finalizado y puntos registrados.");
-                    }
-                } else {
-                    System.out.println("Partido no encontrado.");
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        // Verificar si el partido existe y si ya está finalizado
+        String queryVerificar = "SELECT finalizado FROM partidos WHERE id = ?";
+        try (PreparedStatement stmtVerificar = conn.prepareStatement(queryVerificar)) {
+            stmtVerificar.setInt(1, partidoId);
+            ResultSet rs = stmtVerificar.executeQuery();
+            if (rs.next()) {
+                String finalizado = rs.getString("finalizado");
+                if ("Sí".equals(finalizado)) {
+                    System.out.println("El partido ya está finalizado y no se puede modificar.");
+                    return;
                 }
+
+                // Registrar puntos y marcar como finalizado
+                System.out.print("Puntos equipo local: ");
+                int puntosLocal = scanner.nextInt();
+                System.out.print("Puntos equipo visitante: ");
+                int puntosVisitante = scanner.nextInt();
+                scanner.nextLine(); // Consumir nueva línea
+
+                String queryActualizar = "UPDATE partidos SET cestas_local = ?, cestas_visitante = ?, finalizado = 'Sí' WHERE id = ?";
+                try (PreparedStatement stmtActualizar = conn.prepareStatement(queryActualizar)) {
+                    stmtActualizar.setInt(1, puntosLocal);
+                    stmtActualizar.setInt(2, puntosVisitante);
+                    stmtActualizar.setInt(3, partidoId);
+                    stmtActualizar.executeUpdate();
+                    System.out.println("Partido finalizado y puntos registrados.");
+                }
+            } else {
+                System.out.println("Partido no encontrado.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+
 
     private static void mostrarInformacionPartido() {
-        System.out.println("\n=== Mostrar Información del Partido ===");
-        System.out.print("Ingrese el ID del partido: ");
-        int partidoId = scanner.nextInt();
-        scanner.nextLine(); // Consumir nueva línea
+    System.out.println("\n=== Mostrar Información del Partido ===");
+    System.out.print("Ingrese el ID del partido: ");
+    int partidoId = scanner.nextInt();
+    scanner.nextLine(); // Consumir nueva línea
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT equipo_local, equipo_visitante, fecha, cestas_local, cestas_visitante, finalizado FROM partidos WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, partidoId);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    String equipoLocal = rs.getString("equipo_local");
-                    String equipoVisitante = rs.getString("equipo_visitante");
-                    LocalDate fecha = rs.getDate("fecha").toLocalDate();
-                    int cestasLocal = rs.getInt("cestas_local");
-                    int cestasVisitante = rs.getInt("cestas_visitante");
-                    boolean finalizado = rs.getBoolean("finalizado");
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        String query = "SELECT equipo_local, equipo_visitante, fecha, cestas_local, cestas_visitante, finalizado FROM partidos WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, partidoId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String equipoLocal = rs.getString("equipo_local");
+                String equipoVisitante = rs.getString("equipo_visitante");
+                LocalDate fecha = rs.getDate("fecha").toLocalDate();
+                int cestasLocal = rs.getInt("cestas_local");
+                int cestasVisitante = rs.getInt("cestas_visitante");
+                String finalizado = rs.getString("finalizado");
 
-                    System.out.println("Equipo Local: " + equipoLocal);
-                    System.out.println("Equipo Visitante: " + equipoVisitante);
-                    System.out.println("Fecha: " + fecha);
-                    System.out.println("Puntos Local: " + cestasLocal);
-                    System.out.println("Puntos Visitante: " + cestasVisitante);
-                    System.out.println("Estado: " + (finalizado ? "Finalizado" : "No Finalizado"));
+                System.out.println("Equipo Local: " + equipoLocal);
+                System.out.println("Equipo Visitante: " + equipoVisitante);
+                System.out.println("Fecha: " + fecha);
+                System.out.println("Puntos Local: " + cestasLocal);
+                System.out.println("Puntos Visitante: " + cestasVisitante);
+                System.out.println("Estado: " + (finalizado.equals("Sí") ? "Finalizado" : "No Finalizado"));
 
-                    if (finalizado) {
-                        if (cestasLocal > cestasVisitante) {
-                            System.out.println("Ganador: " + equipoLocal);
-                        } else if (cestasVisitante > cestasLocal) {
-                            System.out.println("Ganador: " + equipoVisitante);
-                        } else {
-                            System.out.println("El partido terminó en empate.");
-                        }
+                if ("Sí".equals(finalizado)) {
+                    if (cestasLocal > cestasVisitante) {
+                        System.out.println("Ganador: " + equipoLocal);
+                    } else if (cestasVisitante > cestasLocal) {
+                        System.out.println("Ganador: " + equipoVisitante);
+                    } else {
+                        System.out.println("El partido terminó en empate.");
                     }
-                } else {
-                    System.out.println("Partido no encontrado.");
                 }
+            } else {
+                System.out.println("Partido no encontrado.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
 
     private static void modificarPartido() {
-        System.out.println("\n=== Modificar Partido ===");
-        System.out.print("Ingrese el ID del partido a modificar: ");
-        int partidoId = scanner.nextInt();
-        scanner.nextLine(); // Consumir nueva línea
+    System.out.println("\n=== Modificar Partido ===");
+    System.out.print("Ingrese el ID del partido a modificar: ");
+    int partidoId = scanner.nextInt();
+    scanner.nextLine(); // Consumir nueva línea
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String queryVerificar = "SELECT finalizado FROM partidos WHERE id = ?";
-            try (PreparedStatement stmtVerificar = conn.prepareStatement(queryVerificar)) {
-                stmtVerificar.setInt(1, partidoId);
-                ResultSet rs = stmtVerificar.executeQuery();
-                if (rs.next()) {
-                    boolean finalizado = rs.getBoolean("finalizado");
-                    if (finalizado) {
-                        System.out.println("El partido ya está finalizado y no se puede modificar.");
-                        return;
-                    }
-
-                    System.out.print("Nuevo equipo local (dejar vacío para no cambiar): ");
-                    String nuevoEquipoLocal = scanner.nextLine();
-                    System.out.print("Nuevo equipo visitante (dejar vacío para no cambiar): ");
-                    String nuevoEquipoVisitante = scanner.nextLine();
-                    System.out.print("Nueva fecha (dejar vacío para no cambiar, formato: día/mes/año): ");
-                    String nuevaFechaInput = scanner.nextLine();
-                    LocalDate nuevaFecha = nuevaFechaInput.isEmpty() ? null : LocalDate.parse(nuevaFechaInput, DateTimeFormatter.ofPattern("d/M/yyyy"));
-
-                    String queryActualizar = "UPDATE partidos SET equipo_local = COALESCE(?, equipo_local), equipo_visitante = COALESCE(?, equipo_visitante), fecha = COALESCE(?, fecha) WHERE id = ?";
-                    try (PreparedStatement stmtActualizar = conn.prepareStatement(queryActualizar)) {
-                        stmtActualizar.setString(1, nuevoEquipoLocal.isEmpty() ? null : nuevoEquipoLocal);
-                        stmtActualizar.setString(2, nuevoEquipoVisitante.isEmpty() ? null : nuevoEquipoVisitante);
-                        stmtActualizar.setDate(3, nuevaFecha != null ? Date.valueOf(nuevaFecha) : null);
-                        stmtActualizar.setInt(4, partidoId);
-                        stmtActualizar.executeUpdate();
-                        System.out.println("Partido modificado exitosamente.");
-                    }
-                } else {
-                    System.out.println("Partido no encontrado.");
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        String queryVerificar = "SELECT finalizado FROM partidos WHERE id = ?";
+        try (PreparedStatement stmtVerificar = conn.prepareStatement(queryVerificar)) {
+            stmtVerificar.setInt(1, partidoId);
+            ResultSet rs = stmtVerificar.executeQuery();
+            if (rs.next()) {
+                boolean finalizado = rs.getString("finalizado").equalsIgnoreCase("Sí");
+                if (finalizado) {
+                    System.out.println("El partido ya está finalizado y no se puede modificar.");
+                    return;
                 }
+
+                System.out.print("Nuevo equipo local (dejar vacío para no cambiar): ");
+                String nuevoEquipoLocal = scanner.nextLine();
+                System.out.print("Nuevo equipo visitante (dejar vacío para no cambiar): ");
+                String nuevoEquipoVisitante = scanner.nextLine();
+                System.out.print("Nueva fecha (dejar vacío para no cambiar, formato: día/mes/año): ");
+                String nuevaFechaInput = scanner.nextLine();
+                LocalDate nuevaFecha = nuevaFechaInput.isEmpty() ? null : LocalDate.parse(nuevaFechaInput, DateTimeFormatter.ofPattern("d/M/yyyy"));
+
+                String queryActualizar = "UPDATE partidos SET equipo_local = COALESCE(?, equipo_local), equipo_visitante = COALESCE(?, equipo_visitante), fecha = COALESCE(?, fecha) WHERE id = ?";
+                try (PreparedStatement stmtActualizar = conn.prepareStatement(queryActualizar)) {
+                    stmtActualizar.setString(1, nuevoEquipoLocal.isEmpty() ? null : nuevoEquipoLocal);
+                    stmtActualizar.setString(2, nuevoEquipoVisitante.isEmpty() ? null : nuevoEquipoVisitante);
+                    stmtActualizar.setDate(3, nuevaFecha != null ? Date.valueOf(nuevaFecha) : null);
+                    stmtActualizar.setInt(4, partidoId);
+                    stmtActualizar.executeUpdate();
+                    System.out.println("Partido modificado exitosamente.");
+                }
+            } else {
+                System.out.println("Partido no encontrado.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+
 
     private static LocalDate leerFechaDesdeConsola() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
